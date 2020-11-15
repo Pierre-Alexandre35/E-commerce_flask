@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+    postgres:
+        image: 'postgres:9.5'
+        env_file:
+          - '.env'
+        volumes:
+          - 'postgres:/var/lib/postgresql/data'
+        ports:
+          - '5432:5432'
+
+mycaptur:
+    build: .
+    command: >
+      gunicorn -b 0.0.0.0:8000
+        --access-logfile -
+        --reload
+        "captur.app:create_app()"
+    env_file: :
+      - '.env'
+    volumes:
+      - '.:/captur'
+    ports:
+      - '8000:8000'
